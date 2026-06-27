@@ -5,8 +5,7 @@ from typing import List
 from app.db.database import get_db
 from app.models.models import Course, Enrollment, Progress
 from app.core.auth import get_current_user, get_current_admin
-from app.schemas.course import CourseCreate, CourseResponse, ProgressUpdate, ProgressResponse
-
+from app.schemas.course import CourseCreate, CourseResponse, ProgressUpdate, ProgressResponse, CourseListResponse, CourseDetailResponse
 router = APIRouter(tags=["Courses & Progress"])
 
 
@@ -14,9 +13,12 @@ router = APIRouter(tags=["Courses & Progress"])
 # 1. LIST ALL COURSES (Public)
 # ──────────────────────────────────────────────
 @router.get("/courses", response_model=List[CourseResponse])
-def get_all_courses(db: Session = Depends(get_db)):
-    """Return all available courses."""
-    courses = db.query(Course).all()
+def get_all_courses(category: str = None, db: Session = Depends(get_db)):
+    """Return all available courses, optionally filtered by category."""
+    query = db.query(Course)
+    if category:
+        query = query.filter(Course.category == category)
+    courses = query.all()
     return courses
 
 
