@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.routes.user_router import router as user_router
 from app.routes.payment_router import router as payment_router
 from app.routes.course_router import router as course_router
+from app.routes.stats_router import router as stats_router
 
 app = FastAPI(
     title="Baoiam EdTech Platform",
@@ -24,6 +25,7 @@ app.add_middleware(
 app.include_router(user_router)
 app.include_router(payment_router)
 app.include_router(course_router)
+app.include_router(stats_router)
 
 
 @app.get("/health", tags=["Health"])
