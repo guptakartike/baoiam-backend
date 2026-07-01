@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, List
 
 
 class CourseCreate(BaseModel):
@@ -32,6 +32,16 @@ class ProgressResponse(BaseModel):
     percent_complete: float
 
 
+class ModuleResponse(BaseModel):
+    """Schema for returning module data."""
+    number: int
+    title: str
+    duration_hours: float
+
+    class Config:
+        from_attributes = True
+
+
 class CourseListResponse(BaseModel):
     """Schema for returning course in list view."""
     id: int
@@ -51,6 +61,7 @@ class CourseDetailResponse(BaseModel):
     description: str
     price: float
     instructor_id: Optional[int] = None
+    modules: List[ModuleResponse] = []
 
     class Config:
         from_attributes = True

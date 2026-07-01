@@ -42,7 +42,7 @@ class Course(Base):
     instructor = relationship("User", back_populates="taught_courses")
     enrollments = relationship("Enrollment", back_populates="course")
     payments = relationship("Payment", back_populates="course")
-
+    modules = relationship("Module", back_populates="course")
 
 # ──────────────────────────────────────────────
 # ENROLLMENT TABLE
@@ -95,3 +95,19 @@ class Progress(Base):
 
     # Relationships
     user = relationship("User", back_populates="progress_records")
+
+
+# ──────────────────────────────────────────────
+# MODULE TABLE
+# ──────────────────────────────────────────────
+class Module(Base):
+    __tablename__ = "modules"
+
+    id = Column(Integer, primary_key=True, index=True)
+    course_id = Column(Integer, ForeignKey("courses.id"))
+    number = Column(Integer, nullable=False)
+    title = Column(String, nullable=False)
+    duration_hours = Column(Float, nullable=False)
+
+    # Relationship
+    course = relationship("Course", back_populates="modules")
