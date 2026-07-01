@@ -35,6 +35,11 @@ class Course(Base):
     title = Column(String, nullable=False)
     description = Column(String, nullable=False)
     price = Column(Float, nullable=False)
+    category = Column(String, nullable=True)
+    avg_salary = Column(String, nullable=True)
+    avg_time_to_hire = Column(String, nullable=True)
+    student_rating = Column(Float, nullable=True)
+    tech_tags = Column(String, nullable=True)
     instructor_id = Column(Integer, ForeignKey("users.id"))
     created_at = Column(DateTime(timezone=True), server_default=func.now())
 

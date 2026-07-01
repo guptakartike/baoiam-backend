@@ -43,24 +43,31 @@ class ModuleResponse(BaseModel):
 
 
 class CourseListResponse(BaseModel):
-    """Schema for returning course in list view."""
+    """Schema for returning course in list/browse view."""
     id: int
     title: str
-    description: str
+    category: Optional[str] = None
     price: float
-    instructor_id: Optional[int] = None
+    avg_salary: Optional[str] = None
+    avg_time_to_hire: Optional[str] = None
+    student_rating: Optional[float] = None
+    tech_tags: Optional[str] = None
 
     class Config:
         from_attributes = True
 
 
 class CourseDetailResponse(BaseModel):
-    """Schema for returning full course detail."""
+    """Schema for returning full course detail view."""
     id: int
     title: str
     description: str
+    category: Optional[str] = None
     price: float
-    instructor_id: Optional[int] = None
+    avg_salary: Optional[str] = None
+    avg_time_to_hire: Optional[str] = None
+    student_rating: Optional[float] = None
+    tech_tags: Optional[str] = None
     modules: List[ModuleResponse] = []
 
     class Config:
