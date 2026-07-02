@@ -3,27 +3,29 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from app.db.database import get_db
-from app.models.models import Course, Enrollment, Progress
+from app.models.models import Course, Enrollment, Progress, Module
 from app.core.auth import get_current_user, get_current_admin
-from app.schemas.course import CourseCreate, CourseResponse, ProgressUpdate, ProgressResponse
-
+from app.schemas.course import CourseCreate, CourseResponse, ProgressUpdate, ProgressResponse, CourseListResponse, CourseDetailResponse
 router = APIRouter(tags=["Courses & Progress"])
 
 
 # ──────────────────────────────────────────────
 # 1. LIST ALL COURSES (Public)
 # ──────────────────────────────────────────────
-@router.get("/courses", response_model=List[CourseResponse])
-def get_all_courses(db: Session = Depends(get_db)):
-    """Return all available courses."""
-    courses = db.query(Course).all()
+@router.get("/courses", response_model=List[CourseListResponse])
+def get_all_courses(category: str = None, db: Session = Depends(get_db)):
+    """Return all available courses, optionally filtered by category."""
+    query = db.query(Course)
+    if category:
+        query = query.filter(Course.category == category)
+    courses = query.all()
     return courses
 
 
 # ──────────────────────────────────────────────
 # 2. GET SINGLE COURSE (Public)
 # ──────────────────────────────────────────────
-@router.get("/courses/{course_id}", response_model=CourseResponse)
+@router.get("/courses/{course_id}", response_model=CourseDetailResponse)
 def get_course_by_id(course_id: int, db: Session = Depends(get_db)):
     """Return a single course by its ID."""
     course = db.query(Course).filter(Course.id == course_id).first()
