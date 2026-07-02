@@ -1,30 +1,40 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, field_validator
 
 
-class SignupRequest(BaseModel):
-    """Schema for user registration."""
-    name: str
-    email: EmailStr
-    password: str
+class SendOTPRequest(BaseModel):
+    phone_number: str
+
+    @field_validator('phone_number')
+    def validate_phone(cls, v):
+        if not v.isdigit() or len(v) != 10:
+            raise ValueError('Phone number must be exactly 10 digits')
+        return v
 
 
-class LoginRequest(BaseModel):
-    """Schema for user login."""
-    email: EmailStr
-    password: str
+class VerifyOTPRequest(BaseModel):
+    phone_number: str
+    otp_code: str
+
+    @field_validator('phone_number')
+    def validate_phone(cls, v):
+        if not v.isdigit() or len(v) != 10:
+            raise ValueError('Phone number must be exactly 10 digits')
+        return v
+
+
+class OTPResponse(BaseModel):
+    message: str
 
 
 class TokenResponse(BaseModel):
-    """Schema for JWT token response."""
     access_token: str
     token_type: str
 
 
 class UserResponse(BaseModel):
-    """Schema for returning user profile data."""
     id: int
-    name: str
-    email: EmailStr
+    name: str | None = None
+    phone_number: str
 
     class Config:
         from_attributes = True
